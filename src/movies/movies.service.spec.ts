@@ -64,4 +64,19 @@ describe('MoviesService', () => {
       }
     });
   });
+
+  describe('updateOne', () => {
+    it('update the movie', () => {
+      service.create({
+        title: 'Test Movie',
+        genres: ['Test'],
+        year: 2012,
+      });
+      service.changeOne(1, {
+        title: 'Updated test movie',
+      });
+      const afterUpdate = service.getOne(1).title;
+      expect(afterUpdate).toEqual('Updated test movie');
+    });
+  });
 });
