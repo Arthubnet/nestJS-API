@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesService } from './movies.service';
+import { NotFoundException } from '@nestjs/common';
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -33,6 +34,27 @@ describe('MoviesService', () => {
       const movie = service.getOne(1);
       expect(movie).toBeDefined();
       expect(movie.id).toEqual(1);
+    });
+
+    it('Cant find non existed movie', () => {
+      try {
+        service.getOne(999);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+  describe('deleteOne', () => {
+    it('delete a movie', () => {
+      service.create({
+        title: 'Test Movie',
+        genres: ['Test'],
+        year: 2012,
+      });
+      const allMovies = service.getAll();
+      service.deleteOne(1);
+      const afterDelete = service.getAll();
+      expect(afterDelete.length).toEqual(allMovies.length - 1);
     });
   });
 });
