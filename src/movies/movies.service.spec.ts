@@ -51,10 +51,17 @@ describe('MoviesService', () => {
         genres: ['Test'],
         year: 2012,
       });
-      const allMovies = service.getAll();
+      const beforeDelete = service.getAll().length;
       service.deleteOne(1);
-      const afterDelete = service.getAll();
-      expect(afterDelete.length).toEqual(allMovies.length - 1);
+      const afterDelete = service.getAll().length;
+      expect(afterDelete).toBeLessThan(beforeDelete);
+    });
+    it('should return 404', () => {
+      try {
+        service.deleteOne(9999);
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 });
